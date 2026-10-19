@@ -1,0 +1,42 @@
+name: 淘寶歷史參考報價同步
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 1,9 * * *' # UTC 01:17/09:17 = 台灣 09:17/17:17
+permissions:
+  contents: write
+concurrency:
+  group: taobao-price-sync
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ONEBOUND_KEY: ${{ secrets.ONEBOUND_KEY }}
+      ONEBOUND_SECRET: ${{ secrets.ONEBOUND_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 檢查與單元測試
+        run: python -m unittest discover -s tests -v
+      - name: 提醒尚未設定 API
+        if: ${{ env.ONEBOUND_KEY == '' || env.ONEBOUND_SECRET == '' }}
+        run: echo '尚未設定 OneBound 金鑰。略過查價，不宣稱資料已更新。'
+      - name: 執行歷史報價更新
+        if: ${{ env.ONEBOUND_KEY != '' && env.ONEBOUND_SECRET != '' }}
+        run: python scripts/price_provider.py
+      - name: 提交更新檔案
+        if: ${{ env.ONEBOUND_KEY != '' && env.ONEBOUND_SECRET != '' }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/provider_history.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: 更新歷史參考報價'
+            git push
+          else
+            echo '沒有資料變更'
+          fi

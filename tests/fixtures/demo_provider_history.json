@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "updated_at_utc": "2026-10-19T00:00:00+00:00",
+  "demo": true,
+  "source": "虛構測試樣本（不是實際行情）",
+  "products": {
+    "817241051574": {
+      "name": "虛構測試商品",
+      "observations": [
+        {
+          "date": "2026-09-12",
+          "hour": 11,
+          "listed": 33.41,
+          "source": "OneBound 商品級歷史報價",
+          "scope": "item_only_unverified_sku",
+          "note": "僅供商品級參考；未核對 SKU、券資格、配送與實付"
+        },
+        {
+          "date": "2026-10-01",
+          "hour": 2,
+          "listed": 5.07,
+          "source": "OneBound 商品級歷史報價",
+          "scope": "item_only_unverified_sku",
+          "note": "僅供商品級參考；未核對 SKU、券資格、配送與實付"
+        },
+        {
+          "date": "2026-10-07",
+          "hour": 19,
+          "listed": 35.42,
+          "source": "OneBound 商品級歷史報價",
+          "scope": "item_only_unverified_sku",
+          "note": "僅供商品級參考；未核對 SKU、券資格、配送與實付"
+        },
+        {
+          "date": "2026-10-10",
+          "hour": 1,
+          "listed": 33.4,
+          "source": "OneBound 商品級歷史報價",
+          "scope": "item_only_unverified_sku",
+          "note": "僅供商品級參考；未核對 SKU、券資格、配送與實付"
+        }
+      ]
+    }
+  },
+  "errors": {}
+}

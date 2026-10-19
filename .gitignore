@@ -1,0 +1,8 @@
+# 不要把金鑰或私人資料提交到公開 GitHub
+.env
+.env.*
+*.secret
+__pycache__/
+*.py[cod]
+.DS_Store
+node_modules/
