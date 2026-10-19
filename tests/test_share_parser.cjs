@@ -1,0 +1,11 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const {extractShare,normalizeSku}=require('../scripts/share_parser.js');
+const sample='【淘宝】7天无理由退货 https://e.tb.cn/h.jcI3YohqskkSodR?tk=IVvvTuHUcLt CZ005 「韩版亚麻条纹长袖衬衫健身轻熟风宽松肌肉男防晒衬衣休闲寸衫薄款」\n点击链接直接打开 或者 淘宝搜索直接打开';
+test('解析使用者淘寶分享全文、保留短連結、不亂猜商品 ID',()=>{let p=extractShare(sample);assert.equal(p.url,'https://e.tb.cn/h.jcI3YohqskkSodR?tk=IVvvTuHUcLt');assert.equal(p.title,'韩版亚麻条纹长袖衬衫健身轻熟风宽松肌肉男防晒衬衣休闲寸衫薄款');assert.equal(p.itemId,null);assert.equal(p.isShort,true)});
+test('標準商品網址取 ID',()=>{let p=extractShare('https://item.taobao.com/item.htm?id=123456789012&spm=test');assert.equal(p.itemId,'123456789012')});
+test('可解析天貓網址',()=>{assert.equal(extractShare('https://detail.tmall.com/item.htm?id=1234567890').itemId,'1234567890')});
+test('可解析手機版網址',()=>{assert.equal(extractShare('https://h5.m.taobao.com/awp/core/detail.htm?id=9876543210').itemId,'9876543210')});
+test('拒絕非淘寶官方網址',()=>{assert.ok(extractShare('https://taobao.com.evil.test/item.htm?id=1234567890').error)});
+test('拒絕憑空辨識短網址 token 作 ID',()=>{assert.equal(extractShare('https://e.tb.cn/h.abc123?tk=ABC12345').itemId,null)});
+test('SKU 一致性比對',()=>{assert.equal(normalizeSku('黑色 / M'),normalizeSku('黑色／M'))});
+test('無連結文字回報錯誤',()=>{assert.ok(extractShare('【淘宝】只有商品名').error)});
